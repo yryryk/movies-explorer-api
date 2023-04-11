@@ -3,6 +3,7 @@ const Movie = require('../models/movie');
 const NotFoundError = require('../utils/NotFoundError');
 const BadRequestError = require('../utils/BadRequestError');
 const ConflictError = require('../utils/ConflictError');
+const ForbiddenError = require('../utils/ForbiddenError');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
@@ -51,12 +52,27 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findByIdAndDelete(req.params._id)
-    .then((movie) => {
-      if (!movie) {
+  Movie.findById(req.params._id)
+    .then((findedMovie) => {
+      if (!findedMovie) {
         throw new NotFoundError('Этой карточки не существует');
       }
-      return res.send(movie);
+      if (String(req.user._id) !== String(findedMovie.owner)) {
+        throw new ForbiddenError('Невозможно удалить');
+      }
+      return Movie.findByIdAndDelete(req.params._id)
+        .then((movie) => {
+          if (!movie) {
+            throw new NotFoundError('Этой карточки не существует');
+          }
+          return res.send(movie);
+        })
+        .catch((err) => {
+          if (err instanceof mongoose.Error.CastError) {
+            return next(new BadRequestError('Вы ещё можете всё исправить!'));
+          }
+          return next(err);
+        });
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
