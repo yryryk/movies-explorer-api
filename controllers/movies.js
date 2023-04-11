@@ -41,9 +41,6 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((movie) => res.send(movie))
     .catch((err) => {
-      if (err.code === 11000) {
-        return next(new ConflictError('Этот фильм уже добавлен'));
-      }
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Вы ещё можете всё исправить!'));
       }
