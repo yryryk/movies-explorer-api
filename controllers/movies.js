@@ -24,33 +24,25 @@ module.exports.createMovie = (req, res, next) => {
     thumbnail,
     movieId,
   } = req.body;
-  Movie.findOne({ movieId })
-    .then((movieOne) => {
-      if (movieOne) {
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner: req.user._id,
+  })
+    .then((movie) => res.send(movie))
+    .catch((err) => {
+      if (err.code === 11000) {
         return next(new ConflictError('Этот фильм уже добавлен'));
       }
-      return Movie.create({
-        country,
-        director,
-        duration,
-        year,
-        description,
-        image,
-        trailerLink,
-        nameRU,
-        nameEN,
-        thumbnail,
-        movieId,
-        owner: req.user._id,
-      })
-        .then((movie) => res.send(movie))
-        .catch((err) => {
-          if (err instanceof mongoose.Error.ValidationError) {
-            return next(new BadRequestError('Вы ещё можете всё исправить!'));
-          }
-          return next(err);
-        });
-    }).catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Вы ещё можете всё исправить!'));
       }
