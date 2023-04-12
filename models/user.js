@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
                 if (equal) {
                   return user;
                 }
-                return Promise.reject(new UnautorizedError('Пользователь не найден'));
+                return Promise.reject(new UnautorizedError('Неправильная почта или пароль'));
               });
           });
       },

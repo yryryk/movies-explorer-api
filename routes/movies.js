@@ -22,12 +22,12 @@ router.post('/', celebrate({
     thumbnail: Joi.string().required().pattern(URL_REGEX),
     trailerLink: Joi.string().required().pattern(URL_REGEX),
     image: Joi.string().required().pattern(URL_REGEX),
-    movieId: Joi.string().hex(),
+    movieId: Joi.number().required(),
   }),
 }), createMovie);
 
 router.delete('/:_id', celebrate({
-  params: Joi.object().keys({ _id: Joi.string().hex() }),
+  params: Joi.object().keys({ _id: Joi.string().length(24).hex() }),
 }), deleteMovie);
 
 module.exports = router;

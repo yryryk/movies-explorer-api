@@ -5,7 +5,7 @@ const BadRequestError = require('../utils/BadRequestError');
 const ForbiddenError = require('../utils/ForbiddenError');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movies) => res.send(movies))
     .catch(next);
 };
@@ -49,17 +49,17 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
-    .then((findedMovie) => {
-      if (!findedMovie) {
-        throw new NotFoundError('Этой карточки не существует');
+    .then((foundMovie) => {
+      if (!foundMovie) {
+        throw new NotFoundError('Этого фильма не существует');
       }
-      if (String(req.user._id) !== String(findedMovie.owner)) {
+      if (String(req.user._id) !== String(foundMovie.owner)) {
         throw new ForbiddenError('Невозможно удалить');
       }
       return Movie.findByIdAndDelete(req.params._id)
         .then((movie) => {
           if (!movie) {
-            throw new NotFoundError('Этой карточки не существует');
+            throw new NotFoundError('Этого фильма не существует');
           }
           return res.send(movie);
         })

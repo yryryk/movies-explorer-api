@@ -73,7 +73,12 @@ module.exports.updateUser = (req, res, next) => {
       }
       res.send(user);
     })
-    .catch((err) => getError(err, next));
+    .catch((err) => {
+      if (err.code === 11000) {
+        return next(new ConflictError('Эта почта уже занята'));
+      }
+      return getError(err, next);
+    });
 };
 
 module.exports.getCurrentUser = (req, res, next) => {

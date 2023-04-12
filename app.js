@@ -9,7 +9,7 @@ const { auth } = require('./middlewares/auth');
 const NotFoundError = require('./utils/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, PORT_DB = 'mongodb://0.0.0.0:27017/bitfilmsdb' } = process.env;
 const app = express();
 
 app.use(helmet());
@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 mongoose.set('strictQuery', true);
-mongoose.connect('mongodb://0.0.0.0:27017/moviesdb');
+mongoose.connect(PORT_DB);
 
 // app.use((req, res, next) => {
 //   const { origin } = req.headers;
