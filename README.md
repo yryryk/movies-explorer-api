@@ -1,4 +1,5 @@
 # movies-explorer-api
+#### Статус: не завершён
 
 Бэкенд сервиса Movies.
 
@@ -35,3 +36,8 @@ https://api.movies.tovchennikov.nomoredomains.monster/
 
 ## [Ссылка на репозиторий фронтенда](https://github.com/yryryk/movies-explorer-frontend)
 ## [Ссылка на репозиторий бэкенда](https://github.com/yryryk/movies-explorer-api)
+
+## Планируемые доработки 
+
+Переделать метод добавления фильмов в избранные. Использующийся сейчас крайне не рационален.
+
